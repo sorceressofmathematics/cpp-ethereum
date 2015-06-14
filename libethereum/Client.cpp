@@ -308,7 +308,7 @@ Client::Client(p2p::Host* _extNet, std::shared_ptr<GasPricer> _gp, std::string c
 
 	auto host = _extNet->registerCapability(new EthereumHost(m_bc, m_tq, m_bq, _networkId));
 	m_host = host;
-	_extNet->addCapability(host, EthereumHost::staticName(), EthereumHost::c_oldProtocolVersion); //TODO: remove this one v61+ protocol is common
+	_extNet->addCapability(host, EthereumHost::staticName(), host->protocolVersion()); //TODO: remove this one v61+ protocol is common
 
 	if (_dbPath.size())
 		Defaults::setDBPath(_dbPath);
@@ -920,5 +920,5 @@ void Client::flushTransactions()
 SyncStatus Client::syncStatus() const
 {
 	auto h = m_host.lock();
-	return h ? h->status() : SyncStatus();
+	return /*h ? h->status() :*/ SyncStatus();
 }

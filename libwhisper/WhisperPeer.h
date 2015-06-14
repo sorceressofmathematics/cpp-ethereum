@@ -51,7 +51,7 @@ class WhisperPeer: public Capability
 	friend class WhisperHost;
 
 public:
-	WhisperPeer(Session* _s, HostCapabilityFace* _h, unsigned _i, CapDesc const& _cap);
+	WhisperPeer(Session* _s, HostCapabilityFace* _h, unsigned _i, CapDesc const&);
 	virtual ~WhisperPeer();
 
 	static std::string name() { return "shh"; }

@@ -77,7 +77,7 @@ protected:
 	virtual std::string name() const { return PeerCap::name(); }
 	virtual u256 version() const { return PeerCap::version(); }
 	virtual unsigned messageCount() const { return PeerCap::messageCount(); }
-	virtual Capability* newPeerCapability(Session* _s, unsigned _idOffset, CapDesc const& _cap) { return new PeerCap(_s, this, _idOffset, _cap); }
+	virtual Capability* newPeerCapability(Session* _s, unsigned _idOffset, CapDesc const& _cd) { return new PeerCap(_s, this, _idOffset, _cd); }
 };
 
 }
