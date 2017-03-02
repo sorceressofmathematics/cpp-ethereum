@@ -1,0 +1,18 @@
+add_sources(
+	Block.cpp
+	BlockChain.cpp
+	BlockChainInsert.cpp
+	BlockChainTests.cpp
+	BlockChainTestsBoost.cpp
+	BlockQueue.cpp
+	ClientBase.cpp
+	EthereumPeerTest.cpp
+	GasPricer.cpp
+	Genesis.cpp
+	State.cpp
+	StateTests.cpp
+	StateUnitTests.cpp
+	Transaction.cpp
+	TransactionQueue.cpp
+	TransactionTests.cpp
+)
