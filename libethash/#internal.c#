@@ -32,7 +32,6 @@
 #include "internal.h"
 #include "data_sizes.h"
 #include "io.h"
-#include "hash.h"
 
 #ifdef WITH_CRYPTOPP
 
@@ -195,19 +194,14 @@ static bool ethash_hash(
 	if (full_size % MIX_WORDS != 0) {
 		return false;
 	}
-	
 
 	// pack hash and nonce together into first 40 bytes of s_mix
 	assert(sizeof(node) * 8 == 512);
 	node s_mix[MIX_NODES + 1];
 	memcpy(s_mix[0].bytes, &header_hash, 32);
 	fix_endian64(s_mix[0].double_words[4], nonce);
-	
-	cn_slow_hash(s_mix->bytes, full_size,reinterpret_cast<hash*>&(ret->result));
-	
-	ret->success = true;
 
-	/*// compute sha3-512 hash and replicate across mix
+	// compute sha3-512 hash and replicate across mix
 	SHA3_512(s_mix->bytes, s_mix->bytes, 40);
 	fix_endian_arr32(s_mix[0].words, 16);
 
@@ -261,7 +255,7 @@ static bool ethash_hash(
 #endif
 		}
 
-	} */
+	}
 
 // Workaround for a GCC regression which causes a bogus -Warray-bounds warning.
 // The regression was introduced in GCC 4.8.4, fixed in GCC 5.0.0 and backported to GCC 4.9.3 but
@@ -279,23 +273,23 @@ static bool ethash_hash(
 #pragma GCC diagnostic ignored "-Warray-bounds"
 #endif // define (__GNUC__)
 
-	/* // compress mix
-	for (uint32_t w = 0; w != MIX_WORDS; w += 4) {
-		uint32_t reduction = mix->words[w + 0];
-		reduction = reduction * FNV_PRIME ^ mix->words[w + 1];
-		reduction = reduction * FNV_PRIME ^ mix->words[w + 2];
-		reduction = reduction * FNV_PRIME ^ mix->words[w + 3];
-		mix->words[w / 4] = reduction;
-	} */
+	//	// compress mix
+	//for (uint32_t w = 0; w != MIX_WORDS; w += 4) {
+	//	uint32_t reduction = mix->words[w + 0];
+	//	reduction = reduction * FNV_PRIME ^ mix->words[w + 1];
+	//	reduction = reduction * FNV_PRIME ^ mix->words[w + 2];
+	//	reduction = reduction * FNV_PRIME ^ mix->words[w + 3];
+	//	mix->words[w / 4] = reduction;
+	//}
 
 #if defined(__GNUC__) && (__GNUC__ < 5)
 #pragma GCC diagnostic pop
 #endif // define (__GNUC__)
 
-	/* fix_endian_arr32(mix->words, MIX_WORDS / 4);
-	memcpy(&ret->mix_hash, mix->bytes, 32);
+	//fix_endian_arr32(mix->words, MIX_WORDS / 4);
+	//memcpy(&ret->mix_hash, mix->bytes, 32);
 	// final Keccak hash
-	SHA3_256(&ret->result, s_mix->bytes, 64 + 32); // Keccak-256(s + compressed_mix) */
+	//SHA3_256(&ret->result, s_mix->bytes, 64 + 32); // Keccak-256(s + compressed_mix)
 	return true;
 }
 
@@ -310,10 +304,9 @@ void ethash_quick_hash(
 	memcpy(buf, header_hash, 32);
 	fix_endian64_same(nonce);
 	memcpy(&(buf[32]), &nonce, 8);
-	//SHA3_512(buf, buf, 40);
+	SHA3_512(buf, buf, 40);
 	memcpy(&(buf[64]), mix_hash, 32);
-	//SHA3_256(return_hash, buf, 64 + 32);
-	cn_fast_hash(buf, 64 + 32, reinterpret_cast<hash*>return_hash);
+	SHA3_256(return_hash, buf, 64 + 32);
 }
 
 ethash_h256_t ethash_get_seedhash(uint64_t block_number)

@@ -26,6 +26,7 @@
 #include <array>
 #include <thread>
 #include <libethash/internal.h>
+//#include <libethash/hash.h>
 #include <libdevcore/Common.h>
 #include <libdevcore/Guards.h>
 #include <libdevcore/Log.h>
